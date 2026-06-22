@@ -1,0 +1,39 @@
+# --- Окружение ---
+.env
+*.env
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# --- Тесты и кэш ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Логи и БД ---
+logs/
+*.log
+*.sqlite3
+*.db
+
+# --- Браузер / Playwright ---
+.playwright/
+playwright-report/
+screenshots/
+
+# --- IDE ---
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,19 @@
+[project]
+name = "tg-bot-vfs"
+version = "0.1.0"
+description = "Telegram-бот для автоматической записи на визу VFS Global"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+# Автоматический режим asyncio — не требует явного маркера для async-тестов.
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+# Базовый набор правил: ошибки, стиль, баги, докстринги.
+select = ["E", "F", "W", "I", "B", "UP"]
