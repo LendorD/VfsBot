@@ -1,0 +1,25 @@
+name: Deploy
+
+# Деплой на сервер при пуше в main (или вручную через кнопку Run workflow).
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            set -e
+            cd ${{ secrets.PROJECT_DIR }}
+            git pull --ff-only
+            docker compose up -d --build
+            docker image prune -f

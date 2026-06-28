@@ -1,0 +1,12 @@
+.git
+.venv
+**/__pycache__
+**/*.pyc
+**/*.db
+**/.browser_profile
+backend/.browser_profile
+sessions
+logs
+node_modules
+webapp
+*.md

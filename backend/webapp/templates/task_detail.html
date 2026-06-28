@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Заявка #{{ task.id }} · Visa Booking{% endblock %}
+{% block content %}
+
+<div class="mb-6 flex items-center gap-3">
+  <a href="/dashboard" class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50">← Назад</a>
+  <h1 class="text-2xl font-bold text-slate-900">Заявка #{{ task.id }}</h1>
+  {% set color = {'created':'bg-sky-100 text-sky-700','searching':'bg-amber-100 text-amber-700','booked':'bg-emerald-100 text-emerald-700','error':'bg-red-100 text-red-700'} %}
+  <span class="rounded-md px-2.5 py-1 text-xs font-medium {{ color.get(task.status, 'bg-slate-100 text-slate-600') }}">{{ task.status }}</span>
+</div>
+
+<div class="grid gap-6 lg:grid-cols-3">
+  <div class="space-y-6 lg:col-span-1">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">Параметры записи</h2>
+      <dl class="space-y-3 text-sm">
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Сайт</dt><dd class="text-right font-medium text-slate-800">VFS · Франция</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Центр</dt><dd class="text-right font-medium text-slate-800">{{ task.center or '—' }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Категория</dt><dd class="text-right font-medium text-slate-800">{{ task.category or '—' }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Подкатегория</dt><dd class="text-right font-medium text-slate-800">{{ task.subcategory or '—' }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Даты</dt><dd class="text-right font-medium text-slate-800">{{ task.date_start or '…' }} – {{ task.date_end or '…' }}</dd></div>
+        <div class="flex justify-between gap-4"><dt class="text-slate-500">Авто-оплата</dt><dd class="text-right font-medium {{ 'text-rose-600' if task.auto_pay else 'text-slate-800' }}">{{ 'включена' if task.auto_pay else 'выключена' }}</dd></div>
+      </dl>
+    </div>
+
+    <form method="post" action="/tasks/{{ task.id }}/delete"
+          onsubmit="return confirm('Удалить заявку?');">
+      <button type="submit" class="w-full rounded-lg border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-100">Удалить заявку</button>
+    </form>
+  </div>
+
+  <div class="lg:col-span-2">
+    <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-500">Заявители ({{ task.applicants_count }})</h2>
+      {% if not task.applicants %}
+      <p class="text-sm text-slate-500">Заявители не указаны.</p>
+      {% else %}
+      <div class="space-y-3">
+        {% for a in task.applicants %}
+        <div class="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
+          <div class="mb-2 font-semibold text-slate-800">{{ loop.index }}. {{ a.first_name }} {{ a.surname }}</div>
+          <div class="grid grid-cols-2 gap-x-6 gap-y-1 text-xs text-slate-500 sm:grid-cols-3">
+            <span>Пол: <span class="text-slate-700">{{ a.gender }}</span></span>
+            <span>Рождение: <span class="text-slate-700">{{ a.birth_date or '—' }}</span></span>
+            <span>Гражданство: <span class="text-slate-700">{{ a.nationality or '—' }}</span></span>
+            <span>Паспорт: <span class="text-slate-700">{{ a.passport_number or '—' }}</span></span>
+            <span>Действует до: <span class="text-slate-700">{{ a.passport_expiry or '—' }}</span></span>
+            <span>Телефон: <span class="text-slate-700">+{{ a.phone_code }} {{ a.phone }}</span></span>
+            <span class="col-span-2 sm:col-span-3">Email: <span class="text-slate-700">{{ a.email or '—' }}</span></span>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="mt-6 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-4 text-sm text-slate-500">
+        🔌 Поиск дат и запись пока не подключены. Когда движок бронирования будет
+        присоединён, здесь появится кнопка «Запустить поиск» и статус слотов.
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

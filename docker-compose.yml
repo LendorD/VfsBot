@@ -1,0 +1,45 @@
+# Полный стек в Docker (для сервера/прода). Браузер воркера здесь HEADLESS.
+# Для разработки с ВИДИМЫМ браузером используйте dev.ps1 (воркер на хосте).
+# Запуск: docker compose up -d --build
+services:
+  worker:                       # Python: движок (ВИДИМЫЙ браузер через noVNC)
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.worker
+    env_file: .env
+    environment:
+      - BROWSER_HEADLESS=false  # браузер рисуется в виртуальный дисплей Xvfb
+    ports:
+      - "8800:8800"
+      - "7900:7900"             # noVNC — смотреть браузер: http://localhost:7900/vnc.html
+    restart: unless-stopped
+
+  api:                          # Go: REST API + отдача фронта
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file: .env
+    environment:
+      - DB_PATH=/app/data/visabooking.db
+      - WORKER_URL=http://worker:8800
+      - FRONTEND_DIR=/app/frontend
+    volumes:
+      - api_data:/app/data
+    depends_on:
+      - worker
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  bot:                          # Go: Telegram-бот
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    command: ["/app/bot"]
+    env_file: .env
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  api_data:

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Visa Booking{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <style>
+    body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .glass { backdrop-filter: blur(10px); }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-sky-50 text-slate-800">
+
+  {% if user %}
+  <header class="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 glass">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
+      <a href="/dashboard" class="flex items-center gap-2 font-semibold text-slate-900">
+        <span class="grid h-9 w-9 place-items-center rounded-xl bg-gradient-to-br from-indigo-600 to-sky-500 text-white shadow-sm">✈</span>
+        <span class="text-lg">Visa<span class="text-indigo-600">Booking</span></span>
+      </a>
+      <div class="flex items-center gap-4">
+        <span class="hidden text-sm text-slate-500 sm:block">{{ user.email }}</span>
+        <a href="/logout" class="rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50">Выйти</a>
+      </div>
+    </div>
+  </header>
+  {% endif %}
+
+  <main class="mx-auto max-w-6xl px-5 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="mx-auto max-w-6xl px-5 py-8 text-center text-xs text-slate-400">
+    Visa Booking · автоматизация записи · для личного использования
+  </footer>
+</body>
+</html>

@@ -27,11 +27,16 @@ logs/
 *.log
 *.sqlite3
 *.db
+webapp/data/
 
 # --- Браузер / Playwright ---
 .playwright/
 playwright-report/
 screenshots/
+.browser_profile/
+
+# --- Сохранённые сессии браузера (содержат cookies — не коммитить) ---
+sessions/
 
 # --- IDE ---
 .idea/

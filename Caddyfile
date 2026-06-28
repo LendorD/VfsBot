@@ -1,0 +1,6 @@
+# Замените на ваш домен (A-запись должна указывать на IP сервера).
+# Caddy сам получит и продлит TLS-сертификат Let's Encrypt.
+visa.example.com {
+    encode gzip
+    reverse_proxy web:8000
+}

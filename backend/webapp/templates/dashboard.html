@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Кабинет · Visa Booking{% endblock %}
+{% block content %}
+
+<div class="mb-7 flex items-end justify-between gap-4">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">Мои заявки</h1>
+    <p class="mt-1 text-sm text-slate-500">Заявки на автоматическую запись в визовый центр</p>
+  </div>
+  <a href="/tasks/new"
+     class="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 to-sky-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-95">
+    <span class="text-lg leading-none">+</span> Новая заявка
+  </a>
+</div>
+
+{% if not tasks %}
+<div class="rounded-2xl border border-dashed border-slate-300 bg-white/60 p-12 text-center">
+  <div class="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-indigo-50 text-2xl">🗓️</div>
+  <h3 class="text-lg font-semibold text-slate-800">Пока нет заявок</h3>
+  <p class="mx-auto mt-1 max-w-sm text-sm text-slate-500">Создайте первую заявку — укажите центр, категорию и заявителей, а поиск свободных дат подключим следующим шагом.</p>
+  <a href="/tasks/new" class="mt-5 inline-block rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-700">Создать заявку</a>
+</div>
+{% else %}
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {% for task in tasks %}
+  <a href="/tasks/{{ task.id }}"
+     class="group rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+    <div class="mb-3 flex items-center justify-between">
+      <span class="rounded-md bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">VFS · Франция</span>
+      {% set color = {'created':'bg-sky-100 text-sky-700','searching':'bg-amber-100 text-amber-700','booked':'bg-emerald-100 text-emerald-700','error':'bg-red-100 text-red-700'} %}
+      <span class="rounded-md px-2 py-1 text-xs font-medium {{ color.get(task.status, 'bg-slate-100 text-slate-600') }}">{{ task.status }}</span>
+    </div>
+    <h3 class="font-semibold text-slate-900 group-hover:text-indigo-600">{{ task.center or 'Центр не указан' }}</h3>
+    <p class="mt-1 text-sm text-slate-500">{{ task.category }}{% if task.subcategory %} · {{ task.subcategory }}{% endif %}</p>
+    <div class="mt-4 flex items-center gap-4 text-xs text-slate-500">
+      <span>👤 {{ task.applicants_count }} заявит.</span>
+      {% if task.date_start or task.date_end %}
+      <span>📅 {{ task.date_start or '…' }} – {{ task.date_end or '…' }}</span>
+      {% endif %}
+      {% if task.auto_pay %}<span class="text-rose-500">💳 авто-оплата</span>{% endif %}
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endblock %}
